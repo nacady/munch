@@ -100,6 +100,8 @@ class Munch(dict):
             try:
                 return self[k]
             except KeyError:
+                if not k.startswith('_'):
+                    return Munch()
                 raise AttributeError(k)
 
     def __setattr__(self, k, v):
@@ -180,7 +182,9 @@ class Munch(dict):
 
             (*) Invertible so long as collection contents are each repr-invertible.
         """
-        return '%s(%s)' % (self.__class__.__name__, dict.__repr__(self))
+        if self:
+            return '%s(%s)' % (self.__class__.__name__, dict.__repr__(self))
+        return ''
 
     def __dir__(self):
         return list(iterkeys(self))
